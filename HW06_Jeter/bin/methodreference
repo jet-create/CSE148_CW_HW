@@ -1,0 +1,293 @@
+#1
+import java.util.Arrays;
+import java.util.Comparator;
+
+class Student implements Comparable<Student> {
+    private String name;
+    private double gpa;
+
+    public Student(String name, double gpa) {
+        this.name = name;
+        this.gpa = gpa;
+    }
+
+    @Override
+    public int compareTo(Student other) {
+        return Double.compare(this.gpa, other.gpa);
+    }
+
+    public static void main(String[] args) {
+        Student[] students = {
+                new Student("Alice", 3.8),
+                new Student("Bob", 3.5),
+                new Student("Carol", 4.0)
+        };
+
+        // Sort by GPA using Comparable
+        Arrays.sort(students);
+        System.out.println("Sorted by GPA:");
+        for (Student student : students) {
+            System.out.println(student.name + " - GPA: " + student.gpa);
+        }
+
+        // Sort by last name using Comparator
+        Arrays.sort(students, Comparator.comparing(s -> s.name.split(" ")[1]));
+        System.out.println("Sorted by last name:");
+        for (Student student : students) {
+            System.out.println(student.name + " - GPA: " + student.gpa);
+        }
+    }
+}
+#2
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Comparator;
+
+class Employee {
+    private String name;
+    private double salary;
+    private String department;
+    private LocalDate joiningDate;
+
+    // Constructor, getters, and setters
+
+    public static void main(String[] args) {
+        Employee[] employees = {
+                new Employee("Alice", 50000, "HR", LocalDate.of(2010, 1, 15)),
+                new Employee("Bob", 60000, "IT", LocalDate.of(2015, 3, 20)),
+                new Employee("Carol", 55000, "Finance", LocalDate.of(2012, 5, 10))
+        };
+
+        // Sort by salary
+        Arrays.sort(employees, Comparator.comparingDouble(Employee::getSalary));
+        System.out.println("Sorted by salary:");
+        for (Employee emp : employees) {
+            System.out.println(emp.getName() + " - Salary: " + emp.getSalary());
+        }
+
+        // Sort by department
+        Arrays.sort(employees, Comparator.comparing(Employee::getDepartment));
+        System.out.println("Sorted by department:");
+        for (Employee emp : employees) {
+            System.out.println(emp.getName() + " - Department: " + emp.getDepartment());
+        }
+
+        // Sort by joining date
+        Arrays.sort(employees, Comparator.comparing(Employee::getJoiningDate));
+        System.out.println("Sorted by joining date:");
+        for (Employee emp : employees) {
+            System.out.println(emp.getName() + " - Joining Date: " + emp.getJoiningDate());
+        }
+    }
+}
+#3
+import java.util.function.Predicate;
+
+class Product {
+    private String name;
+    private String category;
+    private double price;
+
+    public Product(String name, String category, double price) {
+        this.name = name;
+        this.category = category;
+        this.price = price;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public static void main(String[] args) {
+        Product[] products = {
+                new Product("Laptop", "Electronics", 1500),
+                new Product("Chair", "Furniture", 100),
+                new Product("Mobile", "Electronics", 800)
+        };
+
+        // Filter products by category "Electronics"
+        Product[] filteredProducts = filterProducts(products, p -> p.getCategory().equals("Electronics"));
+
+        System.out.println("Electronics products:");
+        for (Product product : filteredProducts) {
+            System.out.println(product.name);
+        }
+    }
+
+    public static Product[] filterProducts(Product[] products, Predicate<Product> predicate) {
+        int count = 0;
+        for (Product product : products) {
+            if (predicate.test(product)) {
+                count++;
+            }
+        }
+        Product[] filteredProducts = new Product[count];
+        int index = 0;
+        for (Product product : products) {
+            if (predicate.test(product)) {
+                filteredProducts[index++] = product;
+            }
+        }
+        return filteredProducts;
+    }
+}
+#4
+import java.util.function.Predicate;
+
+class Product {
+    private String name;
+    private double price;
+
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public static void main(String[] args) {
+        Product[] products = {
+                new Product("Laptop", 1500),
+                new Product("Chair", 100),
+                new Product("Mobile", 800)
+        };
+
+        // Remove products below a certain price
+        Product[] filteredProducts = removeProducts(products, p -> p.getPrice() < 1000);
+
+        System.out.println("Products above $1000:");
+        for (Product product : filteredProducts) {
+            System.out.println(product.name);
+        }
+    }
+
+    public static Product[] removeProducts(Product[] products, Predicate<Product> predicate) {
+        int count = 0;
+        for (Product product : products) {
+            if (!predicate.test(product)) {
+                count++;
+            }
+        }
+        Product[] filteredProducts = new Product[count];
+        int index = 0;
+        for (Product product : products) {
+            if (!predicate.test(product)) {
+                filteredProducts[index++] = product;
+            }
+        }
+        return filteredProducts;
+    }
+}
+#5
+import java.util.Arrays;
+
+class Book implements Comparable<Book> {
+    private String title;
+    private String author;
+    private String isbn;
+
+    public Book(String title, String author, String isbn) {
+        this.title = title;
+        this.author = author;
+        this.isbn = isbn;
+    }
+
+    @Override
+    public int compareTo(Book other) {
+        return this.title.compareTo(other.title);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Book)) return false;
+        Book other = (Book) obj;
+        return isbn.equals(other.isbn);
+    }
+
+    public static void main(String[] args) {
+        Book[] books = {
+                new Book("Java Programming", "John Smith", "12345"),
+                new Book("Python Basics", "Jane Doe", "67890"),
+                new Book("Java Programming", "John Smith", "12345") // Duplicate
+        };
+
+        Arrays.sort(books); // Sorted by title
+
+        System.out.println("Sorted books:");
+        for (Book book : books) {
+            System.out.println(book.title + " by " + book.author);
+        }
+    }
+}
+#6
+import java.util.Arrays;
+
+class Vehicle implements Comparable<Vehicle> {
+    private String make;
+    private String model;
+    private int year;
+    private double price;
+
+    // Constructor, getters, and setters
+
+    public static void main(String[] args) {
+        Vehicle[] vehicles = {
+                new Vehicle("Toyota", "Camry", 2018, 25000),
+                new Vehicle("Honda", "Accord", 2020, 30000),
+                new Vehicle("Toyota", "Corolla", 2019, 22000)
+        };
+
+        // Sort by make, then model, then year
+        Arrays.sort(vehicles);
+        System.out.println("Sorted vehicles:");
+        for (Vehicle vehicle : vehicles) {
+            System.out.println(vehicle.make + " " + vehicle.model + " " + vehicle.year);
+        }
+
+        // Filter vehicles within a price range
+        double minPrice = 22000;
+        double maxPrice = 25000;
+        Vehicle[] filteredVehicles = filterVehicles(vehicles, v -> v.getPrice() >= minPrice && v.getPrice() <= maxPrice);
+
+        System.out.println("Vehicles within price range:");
+        for (Vehicle vehicle : filteredVehicles) {
+            System.out.println(vehicle.make + " " + vehicle.model + " " + vehicle.year + " - $" + vehicle.price);
+        }
+    }
+
+    public static Vehicle[] filterVehicles(Vehicle[] vehicles, Predicate<Vehicle> predicate) {
+        int count = 0;
+        for (Vehicle vehicle : vehicles) {
+            if (predicate.test(vehicle)) {
+                count++;
+            }
+        }
+        Vehicle[] filteredVehicles = new Vehicle[count];
+        int index = 0;
+        for (Vehicle vehicle : vehicles) {
+            if (predicate.test(vehicle)) {
+                filteredVehicles[index++] = vehicle;
+            }
+        }
+        return filteredVehicles;
+    }
+
+    @Override
+    public int compareTo(Vehicle other) {
+        if (!this.make.equals(other.make)) {
+            return this.make.compareTo(other.make);
+        } else if (!this.model.equals(other.model)) {
+            return this.model.compareTo(other.model);
+        } else {
+            return Integer.compare(this.year, other.year);
+        }
+    }
+
+    public double getPrice() {
+        return price;
+    }
+}
+

@@ -1,0 +1,5 @@
+name=jeter
+id=123
+phone=(631)-947-5839
+GPA=3.4
+major=cs
