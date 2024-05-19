@@ -1,0 +1,329 @@
+#1 
+import java.util.Objects;
+
+class Person {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return age == person.age && Objects.equals(name, person.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, age);
+    }
+
+    public static void main(String[] args) {
+        Person person1 = new Person("Alice", 25);
+        Person person2 = new Person("Alice", 25);
+        Person person3 = new Person("Bob", 30);
+
+        System.out.println("person1 equals person2: " + person1.equals(person2)); // true
+        System.out.println("person1 equals person3: " + person1.equals(person3)); // false
+
+        System.out.println("HashCode of person1: " + person1.hashCode());
+        System.out.println("HashCode of person2: " + person2.hashCode());
+    }
+}
+
+#2
+import java.util.Arrays;
+
+class Person implements Comparable<Person> {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public int compareTo(Person other) {
+        return Integer.compare(this.age, other.age);
+    }
+
+    public static void main(String[] args) {
+        Person[] people = {
+                new Person("Alice", 25),
+                new Person("Bob", 30),
+                new Person("Carol", 20)
+        };
+
+        Arrays.sort(people);
+
+        System.out.println("Sorted by age:");
+        for (Person person : people) {
+            System.out.println(person.name + " - " + person.age);
+        }
+    }
+}
+#3
+class Person {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return age == person.age && name.equals(person.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * name.hashCode() + age;
+    }
+
+    public static Person[] removeDuplicates(Person[] people) {
+        int uniqueCount = 0;
+        for (int i = 0; i < people.length; i++) {
+            boolean isDuplicate = false;
+            for (int j = i + 1; j < people.length; j++) {
+                if (people[i].equals(people[j])) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+            if (!isDuplicate) {
+                uniqueCount++;
+            }
+        }
+
+        Person[] uniquePeople = new Person[uniqueCount];
+        int index = 0;
+        for (Person person : people) {
+            boolean isDuplicate = false;
+            for (Person unique : uniquePeople) {
+                if (person.equals(unique)) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+            if (!isDuplicate) {
+                uniquePeople[index++] = person;
+            }
+        }
+        return uniquePeople;
+    }
+
+    public static void main(String[] args) {
+        Person[] people = {
+                new Person("Alice", 25),
+                new Person("Bob", 30),
+                new Person("Alice", 25),
+                new Person("Carol", 20)
+        };
+
+        Person[] uniquePeople = removeDuplicates(people);
+        System.out.println("Unique people:");
+        for (Person person : uniquePeople) {
+            System.out.println(person.name + " - " + person.age);
+        }
+    }
+}
+#4
+import java.util.Arrays;
+
+class Person {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+    public static void main(String[] args) {
+        Person[] originalArray = {
+                new Person("Alice", 25),
+                new Person("Bob", 30),
+                new Person("Carol", 20)
+        };
+
+        Team originalTeam = new Team(originalArray);
+        Team copiedTeam = originalTeam.shallowCopy();
+
+        System.out.println("Original Team:");
+        System.out.println(Arrays.toString(originalTeam.getMembers()));
+
+        System.out.println("Copied Team:");
+        System.out.println(Arrays.toString(copiedTeam.getMembers()));
+
+        // Modify a person in the original team
+        originalTeam.getMembers()[0].setName("Mallory");
+
+        System.out.println("After modifying original Team:");
+        System.out.println(Arrays.toString(originalTeam.getMembers()));
+
+        System.out.println("Copied Team (unchanged after modification):");
+        System.out.println(Arrays.toString(copiedTeam.getMembers()));
+    }
+}
+
+class Team {
+    private Person[] members;
+
+    public Team(Person[] members) {
+        this.members = members;
+    }
+
+    public Person[] getMembers() {
+        return members;
+    }
+
+    public Team shallowCopy() {
+        return new Team(this.members);
+    }
+}
+#5
+import java.util.Arrays;
+
+class Person {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+    public static void main(String[] args) {
+        Person[] originalArray = {
+                new Person("Alice", 25),
+                new Person("Bob", 30),
+                new Person("Carol", 20)
+        };
+
+        Team originalTeam = new Team(originalArray);
+        Team copiedTeam = originalTeam.deepCopy();
+
+        System.out.println("Original Team:");
+        System.out.println(Arrays.toString(originalTeam.getMembers()));
+
+        System.out.println("Copied Team:");
+        System.out.println(Arrays.toString(copiedTeam.getMembers()));
+
+        // Modify a person in the original team
+        originalTeam.getMembers()[0].setName("Mallory");
+
+        System.out.println("After modifying original Team:");
+        System.out.println(Arrays.toString(originalTeam.getMembers()));
+
+        System.out.println("Copied Team (remains unchanged after modification):");
+        System.out.println(Arrays.toString(copiedTeam.getMembers()));
+    }
+}
+
+class Team {
+    private Person[] members;
+
+    public Team(Person[] members) {
+        this.members = members;
+    }
+
+    public Person[] getMembers() {
+        return members;
+    }
+
+    public Team deepCopy() {
+        Person[] copiedMembers = new Person[members.length];
+        for (int i = 0; i < members.length; i++) {
+            copiedMembers[i] = new Person(members[i].getName(), members[i].getAge());
+        }
+        return new Team(copiedMembers);
+    }
+}
+#6
+import java.util.Arrays;
+import java.util.Comparator;
+
+class Person {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+    public static void main(String[] args) {
+        Person[] people = {
+                new Person("Alice", 25),
+                new Person("Bob", 30),
+                new Person("Carol", 20)
+        };
+
+        Arrays.sort(people, new NameAgeComparator());
+
+        System.out.println("Sorted by name then age:");
+        for (Person person : people) {
+            System.out.println(person);
+        }
+    }
+
+    // Comparator for custom sorting by name first, then age
+    static class NameAgeComparator implements Comparator<Person> {
+        @Override
+        public int compare(Person p1, Person p2) {
+            int nameComparison = p1.getName().compareTo(p2.getName());
+            if (nameComparison != 0) {
+                return nameComparison; // Sort by name
+            }
+            return Integer.compare(p1.getAge(), p2.getAge()); // Then by age
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+}
+
